@@ -1,5 +1,4 @@
-import loginZju from "login-zju";
-const { COURSES, ZJUAM } = loginZju;
+import { COURSES, ZJUAM } from "login-zju";
 import { v4 as uuidv4 } from "uuid";
 import "dotenv/config";
 import crypto from "crypto";
