@@ -1,41 +1,37 @@
 name: ZJU AutoSign
 
 on:
-  workflow_dispatch:      # 允许手动点击按钮触发
+  workflow_dispatch:      # 允许手动触发
   schedule:
-    - cron: '0 23 * * *'  # 每天UTC时间23:00（北京时间早上7:00）自动运行
+    - cron: '0 23 * * *'  # 北京时间早上7:00
 
 jobs:
   run-sign:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 下载你的代码仓库
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. 安装 Node.js 环境
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
 
-    # 3. 安装依赖包 (就是你之前报错缺少的 login-zju)
     - name: Install dependencies
-      run: |
-        npm install
+      run: npm install
 
-    # 4. 运行签到脚本
+    # 【关键修改】强制设置项目为 ES Module 模式
+    - name: Set package type to module
+      run: npm pkg set type="module"
+
     - name: Run AutoSign Script
       env:
-        # 这里读取你在 Settings 里填写的 Secrets
         ZJU_USERNAME: ${{ secrets.ZJU_USERNAME }}
         ZJU_PASSWORD: ${{ secrets.ZJU_PASSWORD }}
         ENABLE_DINGTALK: ${{ secrets.ENABLE_DINGTALK }}
         DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
         DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
       run: |
-        # 注意：这里假设你的脚本在 courses.zju 文件夹下，名字叫 autosign.js
-        # 如果你的文件结构不一样，请修改下面的路径
         cd courses.zju
         node autosign.js
