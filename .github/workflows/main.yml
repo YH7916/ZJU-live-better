@@ -13,15 +13,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # 【关键修改】这里改成 22，和你本机一致
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: '22'
 
     - name: Install dependencies
       run: npm install
 
-    # 【关键修改】强制设置项目为 ES Module 模式
+    # 这一步还是保留，确保服务器知道这是新版JS
     - name: Set package type to module
       run: npm pkg set type="module"
 
